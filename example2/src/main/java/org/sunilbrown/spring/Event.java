@@ -4,6 +4,8 @@
 package org.sunilbrown.spring;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author sunil
@@ -13,6 +15,7 @@ public class Event {
 	private Long id;
     private String title;
     private Date date;
+    private Set participants = new HashSet();
 
     public Event() {}
 
@@ -40,4 +43,22 @@ public class Event {
         this.title = title;
     }
 
+	protected Set getParticipants() {
+		return participants;
+	}
+
+	protected void setParticipants(Set participants) {
+		this.participants = participants;
+	}
+	
+	public void addToParticipants(Person person){
+		this.getParticipants().add(person);
+		person.getEvents().add(this);
+	}
+	
+	public void removeFromParticipants(Person person){
+		this.getParticipants().remove(person);
+		person.getEvents().remove(this);
+	}
+	
 }

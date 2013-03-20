@@ -41,6 +41,13 @@ public class EventManager {
             mgr.addPersonToEvent(personId, eventId);
             log.info("Added person " + personId + " to event " + eventId);
         }
+        else if (args[0].equals("addemailtoperson")) {
+        	String email = "xyz@yahoo.com";
+            Long personId = mgr.createAndStorePerson("Foo", "Bar");
+            log.info("Adding email " + email + " to person " + personId);
+            mgr.addEmailToPerson(personId, email);
+            log.info("Added email " + email + " to person " + personId);
+        }
 
         HibernateUtil.getSessionFactory().close();
     }
@@ -86,6 +93,17 @@ public class EventManager {
         Person aPerson = (Person) session.load(Person.class, personId);
         Event anEvent = (Event) session.load(Event.class, eventId);
         aPerson.getEvents().add(anEvent);
+
+        session.getTransaction().commit();
+    }
+    
+    private void addEmailToPerson(Long personId, String emailAddress) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
+        Person aPerson = (Person) session.load(Person.class, personId);
+        // adding to the emailAddress collection might trigger a lazy load of the collection
+        aPerson.getEmailAddresses().add(emailAddress);
 
         session.getTransaction().commit();
     }
